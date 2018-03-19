@@ -57,5 +57,19 @@ namespace TestNinja.UnitTests
 
             Assert.That(result, Is.EquivalentTo(new[] {1, 3, 5}));
         }
+        [Test]
+        public void GetOddNumbers_LimitIsZero_ReturnsNoResult()
+        {
+            var result = _math.GetOddNumbers(0);
+
+            Assert.IsFalse(result.Any());
+        }
+        [Test]
+        public void GetOddNumbers_LimitLessThanZero_ReturnsNoResult()
+        {
+            var result = _math.GetOddNumbers(-5);
+
+            Assert.IsFalse(result.Any());
+        }
     }
 }
