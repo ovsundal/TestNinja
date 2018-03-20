@@ -17,21 +17,16 @@ namespace TestNinja.UnitTests.Mocking
             _mockFileReader = new Mock<IFileReader>();
             _videoService = new VideoService(_mockFileReader.Object);
             
-            _mockFileReader.Setup(fr => fr.Read("video.txt")).Returns("");
+            
         }
         [Test]
         public void ReadVideoTitle_EmptyFile_ReturnError()
         {
+            _mockFileReader.Setup(fr => fr.Read("video.txt")).Returns("");
+            
             var result = _videoService.ReadVideoTitle();
             
             Assert.That(result, Does.Contain("error").IgnoreCase);
         }
-//        [Test]
-//        public void ReadVideoTitle_WhenCalled_ReturnEmptyString()
-//        {
-//            var result = _videoService.ReadVideoTitle();
-//            
-//            Assert.That(result, Does.Contain("").IgnoreCase);
-//        }
     }
 }
