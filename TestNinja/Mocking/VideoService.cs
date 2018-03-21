@@ -15,7 +15,7 @@ namespace TestNinja.Mocking
         public VideoService(IFileReader fileReader = null, IVideoRepository repository = null)
         {
             _fileReader = fileReader ?? new FileReader();
-            repository = _repository ?? new VideoRepository();
+            _repository = repository ?? new VideoRepository();
         }
 
         public string ReadVideoTitle()
@@ -27,6 +27,9 @@ namespace TestNinja.Mocking
             return video.Title;
         }
 
+        //need to test these
+        // [] => ""
+        // [{}, {}, {}] => "1,2,3"
         public string GetUnprocessedVideosAsCsv()
         {
             var videoIds = new List<int>();

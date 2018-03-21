@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using TestNinja.Mocking;
@@ -9,14 +10,15 @@ namespace TestNinja.UnitTests.Mocking
     public class VideoServiceTests
     {
         private Mock<IFileReader> _mockFileReader;
+        private Mock<IVideoRepository> _repository;
         private VideoService _videoService;
 
         [SetUp]
         public void SetUp()
         {
             _mockFileReader = new Mock<IFileReader>();
-            _videoService = new VideoService(_mockFileReader.Object);
-            
+            _repository = new Mock<IVideoRepository>();
+            _videoService = new VideoService(_mockFileReader.Object, _repository.Object);
         }
         [Test]
         public void ReadVideoTitle_EmptyFile_ReturnsError()
@@ -28,13 +30,28 @@ namespace TestNinja.UnitTests.Mocking
             Assert.That(result, Does.Contain("error").IgnoreCase);
         }
         [Test]
-        public void ReadVideoTitle_ValidFile_ReturnsVideoTitle()
+        public void GetUnprocessedVideosAsCsv_AllVideosAreProcessed_ReturnsEmptyString()
         {
-            _mockFileReader.Setup(fr => fr.Read("video.txt")).Returns("Terminator 4");
+            _repository.Setup(r => r.GetUnprocessedVideos()).Returns(new List<Video>());
+
+            var result = _videoService.GetUnprocessedVideosAsCsv();
             
-            var result = _videoService.ReadVideoTitle();
-            
-            Assert.That(result, Does.Contain("Terminator").IgnoreCase);
+            Assert.That(result, Is.EqualTo(""));
         }
+        [Test]
+        public void GetUnprocessedVideosAsCsv_VideosAreUnprocessed_ReturnsStringWithIdOfUnprocessedVideos()
+        {
+            _repository.Setup(r => r.GetUnprocessedVideos()).Returns(new List<Video>
+            {
+                new Video {Id = 1}, 
+                new Video {Id = 2}, 
+                new Video {Id = 3}
+            });
+
+            var result = _videoService.GetUnprocessedVideosAsCsv();
+            
+            Assert.That(result, Is.EqualTo("1,2,3"));
+        }
+
     }
 }

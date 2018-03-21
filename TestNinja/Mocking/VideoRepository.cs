@@ -8,6 +8,7 @@ namespace TestNinja.Mocking
         IEnumerable<Video> GetUnprocessedVideos();
     }
 
+    //this was separated from VideoService because it accesses the database
     public class VideoRepository : IVideoRepository
     {
         public IEnumerable<Video> GetUnprocessedVideos()
@@ -20,9 +21,7 @@ namespace TestNinja.Mocking
                         select video).ToList();
 
                 return videos;
-            }
-            
-            
+            }    
         }
     }
 }
