@@ -41,6 +41,8 @@ namespace TestNinja.UnitTests
         {
             var id = Guid.Empty;
             _logger.ErrorLogged += (sender, args) => { id = args; };
+
+            _logger.Log("a");
             
             //if error logged, id will no longer be empty
             Assert.That(id, Is.Not.EqualTo(Guid.Empty));
